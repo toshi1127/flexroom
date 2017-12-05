@@ -1,11 +1,4 @@
-/*
- *  Copyright (c) 2015 The WebRTC project authors. All Rights Reserved.
- *
- *  Use of this source code is governed by a BSD-style license
- *  that can be found in the LICENSE file in the root of the source
- *  tree.
- */
-'use strict';//これ何
+'use strict';
 
 var localConnection;
 var remoteConnection;
@@ -40,10 +33,8 @@ function createConnection() {
   var servers = null;
   pcConstraint = null;
 
-  // Add localConnection to global scope to make it visible
-  // from the browser console.
   window.localConnection = localConnection = new RTCPeerConnection(servers,pcConstraint);
-  //trace('Created local peer connection object localConnection');
+
 
   sendChannel = localConnection.createDataChannel('sendDataChannel');
   sendChannel.binaryType = 'arraybuffer';
@@ -79,9 +70,7 @@ function onCreateSessionDescriptionError(error) {
 
 function sendData() {
   var file = fileInput.files[0];
-  //trace('File is ' + [file.name, file.size, file.type,file.lastModifiedDate  ].join(' '));
 
-  // Handle 0 size files.
   statusMessage.textContent = '';
   downloadAnchor.textContent = '';
   if (file.size === 0) {
@@ -194,8 +183,7 @@ function onReceiveMessageCallback(event) {
   // trace('Received Message ' + event.data.byteLength);
   receiveBuffer.push(event.data);
   receivedSize += event.data.byteLength;
-  // we are assuming that our signaling protocol told
-  // about the expected file size (and name, hash, etc).
+
   var file = fileInput.files[0];
   if (receivedSize === file.size) {
     var received = new window.Blob(receiveBuffer);
@@ -256,8 +244,6 @@ function displayStats() {
 
   if (remoteConnection && remoteConnection.iceConnectionState === 'connected') {
     if (adapter.browserDetails.browser === 'chrome') {
-      // TODO: once https://code.google.com/p/webrtc/issues/detail?id=4321
-      // lands those stats should be preferrred over the connection stats.
       remoteConnection.getStats(null, function(stats) {
         for (var key in stats) {
           var res = stats[key];
@@ -280,10 +266,6 @@ function displayStats() {
         }
       });
     } else {
-      // Firefox currently does not have data channel stats. See
-      // https://bugzilla.mozilla.org/show_bug.cgi?id=1136832
-      // Instead, the bitrate is calculated based on the number of
-      // bytes received.
       var bytesNow = receivedSize;
       var now = (new Date()).getTime();
       var bitrate = Math.round((bytesNow - bytesPrev) * 8 /
