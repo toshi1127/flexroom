@@ -1,31 +1,5 @@
-// Last time updated at Feb 16, 2017, 08:32:23
-
-// Latest file can be found here: https://cdn.webrtc-experiment.com/getScreenId.js
-
-// Muaz Khan         - www.MuazKhan.com
-// MIT License       - www.WebRTC-Experiment.com/licence
-// Documentation     - https://github.com/muaz-khan/getScreenId.
-
-// ______________
-// getScreenId.js
-
-/*
-getScreenId(function (error, sourceId, screen_constraints) {
-    // error    == null || 'permission-denied' || 'not-installed' || 'installed-disabled' || 'not-chrome'
-    // sourceId == null || 'string' || 'firefox'
-    
-    if(sourceId == 'firefox') {
-        navigator.mozGetUserMedia(screen_constraints, onSuccess, onFailure);
-    }
-    else navigator.webkitGetUserMedia(screen_constraints, onSuccess, onFailure);
-});
-*/
-
 (function() {
     window.getScreenId = function(callback) {
-        // for Firefox:
-        // sourceId == 'firefox'
-        // screen_constraints = {...}
         if (!!navigator.mozGetUserMedia) {
             callback(null, 'firefox', {
                 video: {
@@ -96,7 +70,6 @@ getScreenId(function (error, sourceId, screen_constraints) {
 
     var iframe;
 
-    // this function is used in RTCMultiConnection v3
     window.getScreenConstraints = function(callback) {
         loadIFrame(function() {
             getScreenId(function(error, sourceId, screen_constraints) {
