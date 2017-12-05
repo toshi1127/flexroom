@@ -1,0 +1,65 @@
+<html>
+<head>    
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/bootstrap.css" rel="stylesheet">
+    <link href="../css/client2.css" rel="stylesheet">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Help Page</title>
+</head>
+<body>
+<form>
+<div class="sample1">
+<h1>このツールの使い方</h1>
+1.Loginボタンをクリック
+<br>
+2.カメラを起動します。
+<br>
+<button type="button" class="btn btn-default" >
+<span class="glyphicon glyphicon-facetime-video" aria-hidden="true" title="メインカメラを起動します"></span> 
+</button>
+<button type="button" class="btn btn-default" >
+<span class="glyphicon glyphicon-camera" aria-hidden="true" title="デスクトップを表示させます。"></span>
+</button>
+<br>
+3.接続を行う
+<br>
+<button type="button" class="btn btn-success" >
+<span class="glyphicon glyphicon-earphone" aria-hidden="true" title="接続を行います。"></span>
+</button>
+<br>
+4.切断
+<br>
+<button type="button" class="btn btn-danger" onclick="hangUp();">
+<span class="glyphicon glyphicon-phone-alt" aria-hidden="true"  title="通話を終了します。"></span>
+</button>
+<br>
+<h3>その他の機能</h3>
+・カメラの一時停止
+<br>
+<button type="button" class="btn btn-warning" id="button">
+<span class="glyphicon glyphicon-pause" aria-hidden="true" title="カメラの停止"></span>
+</button>
+<br>
+・音声のミュート
+<br>
+<button type="button" class="btn btn-warning" id="button5">
+<span class="glyphicon glyphicon-volume-off" aria-hidden="true" title="ミュートします"></span>
+</button>
+<br>
+・チャット画面の表示
+<br>
+<button type="button" class="btn btn-primary" id=button2>
+<span class="glyphicon glyphicon-comment" aria-hidden="true" title="チャット画面の表示"></span>
+</button>
+<br>
+・ファイルの共有
+<br>
+<span class="glyphicon glyphicon-folder-open btn btn-info" aria-hidden="true" title="フォルタの共有">
+<input type="file" id="fileInput" name="files" style="display:none"/>
+</span>
+<br>
+<input type="button" value="このページを閉じる" onClick="window.close()">
+</div>
+</form>
+</body>
+</html>
