@@ -109,7 +109,7 @@ function makeroom(){
 	prompt("こちらが部屋のIDです。",Math.round( Math.random() * 1e15 ).toString(36));
 }
 function openWindow() {
-  window.open("./html/help.html","OpenWindow",
+  window.open("./help","OpenWindow",
     "screenX="+60+",screenY="+30+",left="+60+",top="+30+",width="+640+",height="+480);
 }
 function normalcall(){
