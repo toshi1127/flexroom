@@ -28,7 +28,7 @@ var Pear=document.getElementById("username2");
 var Own=document.getElementById("username");
 var SendMessage=document.getElementById("Textarea");
 var MessageList=document.getElementById("Textarea2");
-var MyID=null;//接続時にIDを作って接続すれば、名前が同じでも別のアカウントとして認識されるはず。
+var MyID=null;
 var downloadAnchor = document.querySelector('a#download');//9/5
 var calls=null;
 downloadAnchor.textContent = '';
@@ -71,12 +71,10 @@ function Logout(){
     select.appendChild(option);
 	for(let i=0;i<fromlist.length;i++){
     if (peerConnections[fromlist[i]]!=null) {
-        console.log("nullじゃない");
         if(peerConnections[fromlist[i]].iceConnectionState != 'closed'){
             peerConnections[fromlist[i]].close();
             peerConnections[fromlist[i]] = null;
             const message = JSON.stringify({ type: 'close',fromid: MyID});
-            console.log('sending close message');
             ws.send(message);
             cleanupVideoElement(remoteVideo);
             textForSendSdp.value = '';
@@ -100,13 +98,10 @@ function Logout(){
     localVideo.pause();
     localVideo.srcObject=null;
 	formlist2.length=0;
-	console.log('sending logout message');
     ws.send(message);
 }
 function enter(){
-    console.log("キーが押されました");
     if( window.event.keyCode == 13 ){
-        console.log("エンター");
       sendtext();
     }
 }
@@ -118,13 +113,9 @@ function openWindow() {
     "screenX="+60+",screenY="+30+",left="+60+",top="+30+",width="+640+",height="+480);
 }
 function normalcall(){
-    //Navigator.mediaDevicesで使用可能なメディアデバイスの情報を取得する。
-    //getUserMediaでメディアへのアクセスを要求することができる。
     navigator.mediaDevices.getUserMedia(videoObj2)
         .then(//thenは二つの引数を渡すことができます。
-        function (stream) { // success
-            console.log("okです");
-            //playVideo(localVideo,stream);//streamは蛇口を表している。ここで蛇口の先をセットしている。
+        function (stream) {
             localStream = stream;
         },
         function (error) { // error
@@ -134,8 +125,6 @@ function normalcall(){
 }
 function StartVideo(){
     calls=true;
-    //Navigator.mediaDevicesで使用可能なメディアデバイスの情報を取得する。
-    //getUserMediaでメディアへのアクセスを要求することができる。
     navigator.mediaDevices.getUserMedia(videoObj)
         .then(//thenは二つの引数を渡すことができます。
         function (stream) { // success
@@ -161,7 +150,7 @@ function StartVideo(){
             booooool2=true;
         }
     };
-            playVideo(localVideo,stream);//streamは蛇口を表している。ここで蛇口の先をセットしている。
+            playVideo(localVideo,stream);
             localStream = stream;
         },
         function (error) { // error
@@ -171,8 +160,6 @@ function StartVideo(){
 }
 function startVideo(){
     calls=true;
-    //Navigator.mediaDevicesで使用可能なメディアデバイスの情報を取得する。
-    //getUserMediaでメディアへのアクセスを要求することができる。
     getScreenId(function(error, sourceId, screen_constraints) {
         navigator.getUserMedia = navigator.mozGetUserMedia || navigator.webkitGetUserMedia;
         navigator.getUserMedia(screen_constraints, function(stream) {
@@ -202,7 +189,6 @@ function playVideo(element,stream){
     localVideo.onclick=function(){
         if(display===false){
             display=true;
-            console.log("local画面がクリックされました。")
             localVideo.style.width="800px";
             localVideo.style.height="600px";
         }
@@ -215,7 +201,6 @@ function playVideo(element,stream){
     remoteVideo.onclick=function(){
         if(display===false){
             display=true;
-            console.log("remote画面がクリックされました。")
             localVideo.style.width="800px";
             localVideo.style.height="600px";
         }
@@ -225,7 +210,6 @@ function playVideo(element,stream){
             localVideo.style.height="360px";
         }   
     };
-    console.log("相手のビデオを出力します・");
     element.srcObject=stream;
     element.play();
 }
@@ -237,27 +221,17 @@ function playVideo(element,stream){
 
 //Step2
 function prepareNewConnection(id){
-    let pc_config = {"iceServers":[]};//{"urls":"stun:stun.skyway.io:3478"} 
-    //引数にはiceServer（情報を持ったオブジェクト）を渡す。
-	console.log("prepareNewConnection id="+id);
+    let pc_config = {"iceServers":[]};
     peer[id] = new RTCPeerConnection(pc_config);
-	console.log(peer[id]);
-    //peerの中にontrack(メンバ変数)があるかどうかを調べている。ないこともあるのでonaddstreamと使い分けをしている。
-    //通信相手からのストリームの共有を行なっている（イベントハンドラ）。
-    //イベントハンドラ（関数）をオーバーライドしてる？
-    if ('ontrack' in peer[id]) {//Firefox向け
-        //無名関数(function myfunk(Event event)を実行しているのと同じこと)
+    if ('ontrack' in peer[id]) {
         peer[id].ontrack = function(event) {
-            console.log('-- peer.ontrack()');
             playVideo(remoteVideo, event.streams[0]);
         };
     }
     else {//Chome向け
         peer[id].onaddstream = function(event) {
-            console.log('-- peer.onaddstream()');
             if(remoteVideo.srcObject!=null){
                 let container = document.getElementById('container');
-                console.log("通話者が3人を超えました。");
                 let video = document.createElement('video');
                 videoelement[id]=video;
                 video.width = '480';
@@ -266,7 +240,6 @@ function prepareNewConnection(id){
                 video.style.border = 'solid black 1px';
                 video.style.margin = '2px';
                 window.onload=function(){
-                    console.log("playvideo");
                     container.appendChild(video);
                     playVideo(video,event.stream);
                 }
@@ -274,7 +247,6 @@ function prepareNewConnection(id){
                 playVideo(video,event.stream);
             }
             else if(remoteVideo.srcObject===null){
-                console.log("相手のビデオを映し出します。");
                 playVideo(remoteVideo, event.stream);
             }
         };
@@ -284,7 +256,6 @@ var count=0;
     //Ice Candidate(通信経路の情報)を取得したときに呼ばれる
 	 peer[id].onicecandidate = function (evt) {
         if (evt.candidate) {
-            console.log(evt.candidate);
             sendIceCandidate(evt.candidate,id);
         } else {
             console.log('empty ice event');
@@ -322,7 +293,6 @@ function hangUp(){
     console.log("fromlist="+fromlist.length);
     for(let i=0;i<fromlist.length;i++){
     if (peerConnections[fromlist[i]]!=null) {
-        console.log("nullじゃない")
         if(peerConnections[fromlist[i]].iceConnectionState != 'closed'){
             peerConnections[fromlist[i]].close();
             peerConnections[fromlist[i]] = null;
@@ -341,7 +311,6 @@ function hangUp(){
 }
 function HANGUP(id){
     if(peerConnections[id]!=null){
-        console.log("nullじゃない");
         if(peerConnections[id].iceConnectionState != 'closed'){
             peerConnections[id].close();
             peerConnections[id] = null;
@@ -402,20 +371,17 @@ function setname2(){
     const message = JSON.stringify("User:"+username2);
     ws.send(username2);
 }
-//Step2 その2
-// Connectボタンが押されたら処理を開始
+
 function connect() {
     if(calls===null){
         normalcall();
     }
     calls=null
     if(Pear.value.length!=0){
-        console.log("connectボタンが押されました。");
         const message=JSON.stringify({type:"call",fromid:MyID,name:Own.value,toid:myObj[Pear.value]});
         ws.send(message);
     }
     else{
-        console.log("複数人の通話をします。");
         for(let i=0;i<formlist2.length;i++){
             if(!fromlist.includes(formlist2[i])){
                 if(formlist2[i]!=MyID){
@@ -429,14 +395,12 @@ function connect() {
 function connectanswer(){
     Connect=true;
     if(Pear.value.length!=0){
-        console.log("複数人の通話をします。");
         makeOffer(myObj[Pear.value]);
     }
 }
 function makeOffer(id) {
     peerConnection = prepareNewConnection(id);
     addConnection(id, peerConnection);
-    console.log("id="+id);
     peerConnections[id].onnegotiationneeded = function(){//これを消せばfirefoxでも繋がる。
         peerConnections[id].createOffer()
             .then(function (sessionDescription) {
@@ -500,11 +464,7 @@ function onSdpText() {
 }
  function addConnection(id, peer) {
     if(!peerConnections.includes(id)){
-        console.log("コネクションを追加します。");
         peerConnections[id] = peer;
-        console.log("id="+id);
-        console.log("peerConnections[id]="+peerConnections[id]);
-        console.log("peerConnections[0]="+peerConnections[0]);
         return;
     }
      return;
@@ -551,18 +511,6 @@ function cleanupVideoElement(element) {
     element.srcObject = null;
 }
 
-
-
-//
-//stopVideoB.onclick = function() {
-  //    console.log('ビデオ止めるで');
-    //  stream.getVideoTracks()[0].enabled = !stream.getVideoTracks()[0].enabled;
-    //}
-//playvideoの真下におく
-
-
-// シグナリングサーバへ接続する
-//httpではない。間違いないように。ポート番号はデフォルトで設定されている。
 const ws = io.connect();//URLとポートを指定
 //WebSocketオブジェクト作成後、onopen,onerror,onmessageのイベントハンドラを作る。
 ws.on('connect', function() {
@@ -716,21 +664,13 @@ ws.on('message',function(message) {
     }
 });
 function getConnection(id) {
-    console.log("id="+id);
-    console.log("peerConnections[id]="+peerConnections[id]);
-    console.log("peerConnections[0]="+peerConnections[0]);
     let peer = peerConnections[id];
     return peer;
 }
 // ICE candaidate受信時にセットする
 function addIceCandidate(candidate,id) {
     let peerConnection=peerConnections[id];
-	console.log("peerConnections[id]="+peerConnections[id]);
-	console.log("getConnection(id)="+getConnection(id));
     if (peerConnections[id]!=null){
-        //受信時に追加していく
-		console.log("addIceCandidate");
-		console.log("peerConnection="+peerConnection);
         peerConnections[id].addIceCandidate(candidate);
     }
     else {
@@ -747,7 +687,7 @@ function sendIceCandidate(candidate,id) {
     console.log('sending candidate=' + message);
     ws.send(message);
 }
-//追記
+
 document.getElementById("button2").onclick=function(){
     if(document.getElementById("global-wrapper").style.display=="block"){
         document.getElementById("global-wrapper").style.display="none";
