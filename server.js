@@ -6,7 +6,7 @@ const ejs = require('ejs');
 const io = require('socket.io')(http);
 
 var index = require('./routes/index');
-
+var help = require('./routes/help');
 // view engine setup
 
 app.set('views', path.join(__dirname, 'views'));
@@ -14,6 +14,7 @@ app.set('view engine', 'ejs');
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
+app.use('/help', help);
 
 var port = '8080';
 http.listen(process.env.PORT || port, () => {
