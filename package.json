@@ -5,8 +5,8 @@
   "description": "realtime chat",
   "main": "server.js",
   "dependencies": {
-    "ejs": "^2.5.7",
-    "express": "^3.1.0",
+    "ejs": "^2.6.1",
+    "express": "~4.15.5",
     "jade": "*",
     "socket.io": "2.0.3"
   },
