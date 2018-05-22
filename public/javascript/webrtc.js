@@ -110,7 +110,7 @@ function makeroom(){
 }
 function openWindow() {
   window.open("./help","OpenWindow",
-    "screenX="+60+",screenY="+30+",left="+60+",top="+30+",width="+640+",height="+480);
+    "screenX="+60+",screenY="+30+",left="+600+",top="+100+",width="+640+",height="+480);
 }
 function normalcall(){
     navigator.mediaDevices.getUserMedia(videoObj2)
